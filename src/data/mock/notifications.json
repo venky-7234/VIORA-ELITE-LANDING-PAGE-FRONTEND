@@ -1,0 +1,18 @@
+{
+  "content": [
+    {
+      "id": "NOTIF-SEED-001",
+      "recipientId": 1,
+      "type": "WELCOME",
+      "relatedEntityId": null,
+      "title": "Welcome to Viora Elite",
+      "message": "Your private member portal is ready.",
+      "isRead": false,
+      "createdAt": "2026-01-20T10:00:00Z"
+    }
+  ],
+  "totalElements": 1,
+  "totalPages": 1,
+  "number": 0,
+  "size": 50
+}

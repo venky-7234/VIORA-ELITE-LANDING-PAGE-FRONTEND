@@ -1,0 +1,604 @@
+﻿
+> theimperium@0.0.0 lint
+> oxlint
+
+
+  ! eslint(no-unused-vars): Identifier 'Fingerprint' is imported but never used.
+   ,-[src/components/panels/UserApplicationPanel.tsx:3:114]
+ 2 | import { motion } from 'framer-motion';
+ 3 | import { Calendar, Building, MapPin, Briefcase, FileText, CheckCircle2, XCircle, Clock, Send, Mail, AlertCircle, Fingerprint } from 'lucide-react';
+   :                                                                                                                  ^^^^^|^^^^^
+   :                                                                                                                       `-- 'Fingerprint' is imported here
+ 4 | import { getMyApplication } from '../../services/api';
+   `----
+  help: Consider removing this import.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has missing dependencies: 'fetchProfile', and 'fetchUnread'
+    ,-[src/pages/AdminDashboard/AdminDashboard.tsx:87:6]
+ 78 |     if (!isAuthorized) return;
+ 79 |     fetchProfile();
+    :     ^^^^^^^^^^^^
+ 80 |     fetchUnread();
+    :     ^^^^^^^^^^^
+ 81 |     window.addEventListener("profileUpdated", fetchProfile);
+ 82 |     window.addEventListener("mock-state-updated", fetchUnread);
+ 83 |     return () => {
+ 84 |       window.removeEventListener("profileUpdated", fetchProfile);
+ 85 |       window.removeEventListener("mock-state-updated", fetchUnread);
+ 86 |     };
+ 87 |   }, [token, isAuthorized]);
+    :      ^^^^^^^^^^^^^^^^^^^^^
+ 88 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! eslint(no-unused-vars): Identifier 'XCircle' is imported but never used.
+   ,-[src/components/modules/AdminReportsModule.tsx:4:24]
+ 3 | import {
+ 4 |   Users, CheckCircle2, XCircle, Clock, Download,
+   :                        ^^^|^^^
+   :                           `-- 'XCircle' is imported here
+ 5 |   BarChart3, Calendar, ChevronDown
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Clock' is imported but never used.
+   ,-[src/components/modules/AdminReportsModule.tsx:4:33]
+ 3 | import {
+ 4 |   Users, CheckCircle2, XCircle, Clock, Download,
+   :                                 ^^|^^
+   :                                   `-- 'Clock' is imported here
+ 5 |   BarChart3, Calendar, ChevronDown
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'BarChart3' is imported but never used.
+   ,-[src/components/modules/AdminReportsModule.tsx:5:3]
+ 4 |   Users, CheckCircle2, XCircle, Clock, Download,
+ 5 |   BarChart3, Calendar, ChevronDown
+   :   ^^^^|^^^^
+   :       `-- 'BarChart3' is imported here
+ 6 | } from "lucide-react";
+   `----
+  help: Consider removing this import.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'fetchReport'
+    ,-[src/components/modules/AdminReportsModule.tsx:51:6]
+ 49 |     }
+ 50 |     fetchReport();
+    :     ^^^^^|^^^^^
+    :          `-- useEffect uses `fetchReport` here
+ 51 |   }, [activeTab, selectedEventId, events, assignedIds]);
+    :      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 52 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! eslint(no-unused-vars): Identifier 'Users' is imported but never used.
+   ,-[src/components/modules/AnalyticsModule.tsx:7:56]
+ 6 | } from 'recharts';
+ 7 | import { Activity, Building, MapPin, Mail, TrendingUp, Users, FileText } from 'lucide-react';
+   :                                                        ^^|^^
+   :                                                          `-- 'Users' is imported here
+ 8 | import { fetchAnalytics } from '../../services/api';
+   `----
+  help: Consider removing this import.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'fetchData'
+    ,-[src/components/modules/AnalyticsModule.tsx:47:37]
+ 46 | 
+ 47 |   useEffect(() => { fetchData(); }, [eventId]);
+    :                     ^^^^|^^^^       ^^^^^^^^^
+    :                         `-- useEffect uses `fetchData` here
+ 48 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'load'
+    ,-[src/components/panels/SuperAdminTasksPanel.tsx:23:6]
+ 19 |   useEffect(() => {
+ 20 |     load();
+    :     ^^|^
+    :       `-- useEffect uses `load` here
+ 21 |     window.addEventListener('mock-state-updated', load);
+ 22 |     return () => window.removeEventListener('mock-state-updated', load);
+ 23 |   }, [token]);
+    :      ^^^^^^^
+ 24 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'fetchStats'
+    ,-[src/components/panels/AdminOverviewPanel.tsx:40:6]
+ 36 |   useEffect(() => {
+ 37 |     fetchStats();
+    :     ^^^^^|^^^^
+    :          `-- useEffect uses `fetchStats` here
+ 38 |     const id = setInterval(fetchStats, 30_000);
+ 39 |     return () => clearInterval(id);
+ 40 |   }, [token]);
+    :      ^^^^^^^
+ 41 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! eslint(no-unused-vars): Identifier 'Calendar' is imported but never used.
+   ,-[src/components/panels/UserEventPanel.tsx:3:10]
+ 2 | import { motion } from 'framer-motion';
+ 3 | import { Calendar, MapPin, Building, Phone, Shirt, Info, Star, CalendarDays, Clock, EyeOff } from 'lucide-react';
+   :          ^^^^|^^^
+   :              `-- 'Calendar' is imported here
+ 4 | import { getEvent, getMyApplication } from '../../services/api';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Star' is imported but never used.
+   ,-[src/components/panels/UserEventPanel.tsx:3:58]
+ 2 | import { motion } from 'framer-motion';
+ 3 | import { Calendar, MapPin, Building, Phone, Shirt, Info, Star, CalendarDays, Clock, EyeOff } from 'lucide-react';
+   :                                                          ^^|^
+   :                                                            `-- 'Star' is imported here
+ 4 | import { getEvent, getMyApplication } from '../../services/api';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Download' is imported but never used.
+   ,-[src/components/modules/ApplicationsModule.tsx:5:53]
+ 4 |   Search, CheckCircle2, XCircle, ChevronLeft, ChevronRight,
+ 5 |   UserPlus, Eye, MoreVertical, CheckSquare, Square, Download
+   :                                                     ^^^^|^^^
+   :                                                         `-- 'Download' is imported here
+ 6 | } from 'lucide-react';
+   `----
+  help: Consider removing this import.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'fetchApps'
+    ,-[src/components/modules/ApplicationsModule.tsx:81:37]
+ 80 | 
+ 81 |   useEffect(() => { fetchApps(); }, [page, activeTab, searchQuery, token, eventId]);
+    :                     ^^^^|^^^^       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    :                         `-- useEffect uses `fetchApps` here
+ 82 |   useEffect(() => {
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'fetchApps'
+     ,-[src/components/modules/ApplicationsModule.tsx:152:6]
+ 135 |     const pollTimer = setInterval(() => {
+ 136 |       fetchApps();
+     :       ^^^^|^^^^
+     :           `-- useEffect uses `fetchApps` here
+ 137 |     }, 15000);
+ 138 | 
+ 139 |     // Sync on tab focus
+ 140 |     const onFocus = () => {
+ 141 |       fetchApps();
+ 142 |     };
+ 143 |     window.addEventListener("focus", onFocus);
+ 144 | 
+ 145 |     return () => {
+ 146 |       if (eventSource) {
+ 147 |         eventSource.close();
+ 148 |       }
+ 149 |       clearInterval(pollTimer);
+ 150 |       window.removeEventListener("focus", onFocus);
+ 151 |     };
+ 152 |   }, [token, activeTab, eventId, adminMode]);
+     :      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 153 | 
+     `----
+  help: Either include it or remove the dependency array.
+
+  ! eslint(no-unused-expressions): Expected expression to be used
+     ,-[src/components/modules/ApplicationsModule.tsx:158:5]
+ 157 |     const next = new Set(selectedIds);
+ 158 |     next.has(id) ? next.delete(id) : next.add(id);
+     :     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 159 |     setSelected(next);
+     `----
+  help: Consider using this expression or removing it
+
+  ! eslint(no-unused-vars): Identifier 'Users' is imported but never used.
+   ,-[src/pages/SuperadminDashboard/SuperadminDashboard.tsx:4:11]
+ 3 | import {
+ 4 |   LogOut, Users, FileText, Activity, LayoutDashboard,
+   :           ^^|^^
+   :             `-- 'Users' is imported here
+ 5 |   CalendarDays, Mail, Shield, BarChart3, Settings,
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'User' is imported but never used.
+   ,-[src/pages/SuperadminDashboard/SuperadminDashboard.tsx:6:40]
+ 5 |   CalendarDays, Mail, Shield, BarChart3, Settings,
+ 6 |   Bell, Menu, X, UserCircle, UserPlus, User, Clock, CheckCircle2, XCircle
+   :                                        ^^|^
+   :                                          `-- 'User' is imported here
+ 7 | } from "lucide-react";
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'fetchEvents' is imported but never used.
+   ,-[src/pages/SuperadminDashboard/SuperadminDashboard.tsx:8:47]
+ 7 | } from "lucide-react";
+ 8 | import { fetchDashboardStats, fetchAuditLogs, fetchEvents, fetchUnreadNotificationCount, getUserProfile } from '../../services/api';
+   :                                               ^^^^^|^^^^^
+   :                                                    `-- 'fetchEvents' is imported here
+ 9 | import { ApplicationsModule } from '../../components/modules/ApplicationsModule';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'AdminProfileModule' is imported but never used.
+    ,-[src/pages/SuperadminDashboard/SuperadminDashboard.tsx:13:10]
+ 12 | import { InvitationsModule } from '../../components/modules/InvitationsModule';
+ 13 | import { AdminProfileModule } from '../../components/modules/AdminProfileModule';
+    :          ^^^^^^^^^|^^^^^^^^
+    :                   `-- 'AdminProfileModule' is imported here
+ 14 | import { SettingsModule } from '../../components/modules/SettingsModule';
+    `----
+  help: Consider removing this import.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has missing dependencies: 'fetchUnreadCount', and 'fetchProfile'
+    ,-[src/pages/SuperadminDashboard/SuperadminDashboard.tsx:73:6]
+ 64 |   useEffect(() => {
+ 65 |     fetchProfile();
+    :     ^^^^^^^^^^^^
+ 66 |     fetchUnreadCount();
+    :     ^^^^^^^^^^^^^^^^
+ 67 |     window.addEventListener("profileUpdated", fetchProfile);
+ 68 |     window.addEventListener("mock-state-updated", fetchUnreadCount);
+ 69 |     return () => {
+ 70 |       window.removeEventListener("profileUpdated", fetchProfile);
+ 71 |       window.removeEventListener("mock-state-updated", fetchUnreadCount);
+ 72 |     };
+ 73 |   }, [token]);
+    :      ^^^^^^^
+ 74 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'load'
+     ,-[src/pages/SuperadminDashboard/SuperadminDashboard.tsx:404:6]
+ 400 |   useEffect(() => {
+ 401 |     load();
+     :     ^^|^
+     :       `-- useEffect uses `load` here
+ 402 |     window.addEventListener("mock-state-updated", load);
+ 403 |     return () => window.removeEventListener("mock-state-updated", load);
+ 404 |   }, [token]);
+     :      ^^^^^^^
+ 405 | 
+     `----
+  help: Either include it or remove the dependency array.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'load'
+    ,-[src/components/modules/EventsModule.tsx:74:6]
+ 70 |   useEffect(() => {
+ 71 |     load();
+    :     ^^|^
+    :       `-- useEffect uses `load` here
+ 72 |     window.addEventListener('mock-state-updated', load);
+ 73 |     return () => window.removeEventListener('mock-state-updated', load);
+ 74 |   }, [page, token]);
+    :      ^^^^^^^^^^^^^
+ 75 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+   ,-[src/components/navigation/DashboardSwitcher.tsx:7:14]
+ 6 | 
+ 7 | export const generateRoleToken = (roles: string[], email: string, name: string) => {
+   :              ^^^^^^^^^^^^^^^^^
+ 8 |   const header = btoa(JSON.stringify({ alg: "HS256", typ: "JWT" }));
+   `----
+
+  ! eslint(no-unused-vars): Identifier 'Users' is imported but never used.
+   ,-[src/components/panels/UserAssignedGuestsPanel.tsx:4:3]
+ 3 | import {
+ 4 |   Users, CheckCircle2, XCircle, Eye, Search,
+   :   ^^|^^
+   :     `-- 'Users' is imported here
+ 5 |   ChevronLeft, ChevronRight, MoreVertical, Clock,
+   `----
+  help: Consider removing this import.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'load'
+    ,-[src/components/panels/UserAssignedGuestsPanel.tsx:65:32]
+ 64 | 
+ 65 |   useEffect(() => { load(); }, [page, activeStatus, searchQuery, token]);
+    :                     ^^|^       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    :                       `-- useEffect uses `load` here
+ 66 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! eslint(no-unused-vars): Identifier 'ChevronDown' is imported but never used.
+   ,-[src/components/modules/GuestsModule.tsx:3:19]
+ 2 | import { 
+ 3 |   Search, Filter, ChevronDown, ChevronLeft, ChevronRight,
+   :                   ^^^^^|^^^^^
+   :                        `-- 'ChevronDown' is imported here
+ 4 |   MoreVertical, CheckCircle, XCircle, Clock, Mail,
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Info' is imported but never used.
+   ,-[src/components/modules/GuestsModule.tsx:5:49]
+ 4 |   MoreVertical, CheckCircle, XCircle, Clock, Mail,
+ 5 |   Phone, MapPin, Building, Briefcase, Calendar, Info
+   :                                                 ^^|^
+   :                                                   `-- 'Info' is imported here
+ 6 | } from 'lucide-react';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'AnimatePresence' is imported but never used.
+   ,-[src/components/modules/GuestsModule.tsx:7:10]
+ 6 | } from 'lucide-react';
+ 7 | import { AnimatePresence } from 'framer-motion';
+   :          ^^^^^^^|^^^^^^^
+   :                 `-- 'AnimatePresence' is imported here
+ 8 | import { searchApplications, fetchEvents } from '../../services/api';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'GuestProfileModal' is imported but never used.
+    ,-[src/components/modules/GuestsModule.tsx:9:10]
+  8 | import { searchApplications, fetchEvents } from '../../services/api';
+  9 | import { GuestProfileModal } from '../common/GuestProfileModal';
+    :          ^^^^^^^^|^^^^^^^^
+    :                  `-- 'GuestProfileModal' is imported here
+ 10 | 
+    `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Variable 'setSize' is declared but never used. Unused variables should start with a '_'.
+    ,-[src/components/modules/GuestsModule.tsx:38:16]
+ 37 |   const [page, setPage] = useState(0);
+ 38 |   const [size, setSize] = useState(10);
+    :                ^^^|^^^
+    :                   `-- 'setSize' is declared here
+ 39 |   const [showFilters, setShowFilters] = useState(false);
+    `----
+  help: Consider removing this declaration.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has missing dependencies: 'loadEvents', and 'fetchGuests'
+    ,-[src/components/modules/GuestsModule.tsx:96:6]
+ 93 |   useEffect(() => {
+ 94 |     fetchGuests();
+    :     ^^^^^^^^^^^
+ 95 |     loadEvents();
+    :     ^^^^^^^^^^
+ 96 |   }, [activeTab, page, size, searchQuery, filters, eventId]);
+    :      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 97 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! eslint(no-unused-vars): Identifier 'Building2' is imported but never used.
+   ,-[src/pages/Login/Login.tsx:6:10]
+ 5 | import { googleLogin } from '../../services/api';
+ 6 | import { Building2 } from 'lucide-react';
+   :          ^^^^|^^^^
+   :              `-- 'Building2' is imported here
+ 7 | import { motion } from 'framer-motion';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Calendar' is imported but never used.
+   ,-[src/components/common/GuestProfileModal.tsx:4:3]
+ 3 |   XCircle, MapPin, Building, Briefcase, Mail, Phone, ExternalLink,
+ 4 |   Calendar, CheckCircle, Clock, X, Activity, User, FileText, Award,
+   :   ^^^^|^^^
+   :       `-- 'Calendar' is imported here
+ 5 |   AlertTriangle, Link, Hash, Layers
+   `----
+  help: Consider removing this import.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'load'
+    ,-[src/components/modules/InvitationsModule.tsx:49:32]
+ 48 | 
+ 49 |   useEffect(() => { load(); }, [token, page, eventId]);
+    :                     ^^|^       ^^^^^^^^^^^^^^^^^^^^^^
+    :                       `-- useEffect uses `load` here
+ 50 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'load'
+    ,-[src/components/panels/UserProfilePanel.tsx:40:32]
+ 39 | 
+ 40 |   useEffect(() => { load(); }, [token]);
+    :                     ^^|^       ^^^^^^^
+    :                       `-- useEffect uses `load` here
+ 41 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! eslint(no-unused-vars): Variable 'eventName' is declared but never used. Unused variables should start with a '_'.
+    ,-[src/components/panels/UserOverviewPanel.tsx:41:9]
+ 40 |   const daysLeft   = metrics?.daysRemaining;
+ 41 |   const eventName  = metrics?.eventName  || "Your Event";
+    :         ^^^^|^^^^
+    :             `-- 'eventName' is declared here
+ 42 |   const welcomeMsg = metrics?.welcomeMessage || "Welcome back.";
+    `----
+  help: Consider removing this declaration.
+
+  ! eslint(no-unused-vars): Variable 'assignedIds' is declared but never used. Unused variables should start with a '_'.
+    ,-[src/components/modules/AdminAssignedEventsModule.tsx:22:10]
+ 21 |   const [allEvents, setAllEvents]   = useState<any[]>([]);
+ 22 |   const [assignedIds, setAssigned]  = useState<string[]>([]);
+    :          ^^^^^|^^^^^
+    :               `-- 'assignedIds' is declared here
+ 23 |   const [loading, setLoading]       = useState(true);
+    `----
+  help: Consider removing this declaration.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'load'
+    ,-[src/components/modules/AdminAssignedEventsModule.tsx:48:32]
+ 47 | 
+ 48 |   useEffect(() => { load(); }, [token]);
+    :                     ^^|^       ^^^^^^^
+    :                       `-- useEffect uses `load` here
+ 49 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! eslint(no-unused-vars): Identifier 'ChevronDown' is imported but never used.
+   ,-[src/components/modules/AdminManageUsersModule.tsx:4:38]
+ 3 | import {
+ 4 |   Users, Search, UserPlus, X, Check, ChevronDown, CalendarDays,
+   :                                      ^^^^^|^^^^^
+   :                                           `-- 'ChevronDown' is imported here
+ 5 |   UserCircle, Mail, Phone, Shield, Loader2, AlertCircle, RefreshCw
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Mail' is imported but never used.
+   ,-[src/components/modules/AdminManageUsersModule.tsx:5:15]
+ 4 |   Users, Search, UserPlus, X, Check, ChevronDown, CalendarDays,
+ 5 |   UserCircle, Mail, Phone, Shield, Loader2, AlertCircle, RefreshCw
+   :               ^^|^
+   :                 `-- 'Mail' is imported here
+ 6 | } from 'lucide-react';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Phone' is imported but never used.
+   ,-[src/components/modules/AdminManageUsersModule.tsx:5:21]
+ 4 |   Users, Search, UserPlus, X, Check, ChevronDown, CalendarDays,
+ 5 |   UserCircle, Mail, Phone, Shield, Loader2, AlertCircle, RefreshCw
+   :                     ^^|^^
+   :                       `-- 'Phone' is imported here
+ 6 | } from 'lucide-react';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Shield' is imported but never used.
+   ,-[src/components/modules/AdminManageUsersModule.tsx:5:28]
+ 4 |   Users, Search, UserPlus, X, Check, ChevronDown, CalendarDays,
+ 5 |   UserCircle, Mail, Phone, Shield, Loader2, AlertCircle, RefreshCw
+   :                            ^^^|^^
+   :                               `-- 'Shield' is imported here
+ 6 | } from 'lucide-react';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Filter' is imported but never used.
+   ,-[src/components/panels/UserNotificationPanel.tsx:3:45]
+ 2 | import { motion, AnimatePresence } from 'framer-motion';
+ 3 | import { Bell, Check, CheckCircle2, Search, Filter, Inbox, Clock, Calendar } from 'lucide-react';
+   :                                             ^^^|^^
+   :                                                `-- 'Filter' is imported here
+ 4 | import { fetchNotifications, markAllNotificationsRead, markNotificationRead } from '../../services/api';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'Calendar' is imported but never used.
+   ,-[src/components/panels/UserNotificationPanel.tsx:3:67]
+ 2 | import { motion, AnimatePresence } from 'framer-motion';
+ 3 | import { Bell, Check, CheckCircle2, Search, Filter, Inbox, Clock, Calendar } from 'lucide-react';
+   :                                                                   ^^^^|^^^
+   :                                                                       `-- 'Calendar' is imported here
+ 4 | import { fetchNotifications, markAllNotificationsRead, markNotificationRead } from '../../services/api';
+   `----
+  help: Consider removing this import.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'loadNotifications'
+    ,-[src/components/panels/UserNotificationPanel.tsx:32:6]
+ 28 |   useEffect(() => {
+ 29 |     loadNotifications();
+    :     ^^^^^^^^|^^^^^^^^
+    :             `-- useEffect uses `loadNotifications` here
+ 30 |     window.addEventListener('mock-state-updated', loadNotifications);
+ 31 |     return () => window.removeEventListener('mock-state-updated', loadNotifications);
+ 32 |   }, [token]);
+    :      ^^^^^^^
+ 33 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! eslint(no-unused-vars): Identifier 'FileText' is imported but never used.
+   ,-[src/components/panels/UserInvitationPanel.tsx:3:52]
+ 2 | import { motion } from 'framer-motion';
+ 3 | import { Send, Eye, ShieldCheck, Mail, ArrowRight, FileText } from 'lucide-react';
+   :                                                    ^^^^|^^^
+   :                                                        `-- 'FileText' is imported here
+ 4 | import { getMyApplication } from '../../services/api';
+   `----
+  help: Consider removing this import.
+
+  ! eslint(no-unused-vars): Identifier 'CheckCircle2' is imported but never used.
+   ,-[src/components/modules/AdminProfileModule.tsx:5:3]
+ 4 |   User, Lock, Camera, X, CalendarDays, Clock,
+ 5 |   CheckCircle2, Shield, Bell
+   :   ^^^^^^|^^^^^
+   :         `-- 'CheckCircle2' is imported here
+ 6 | } from "lucide-react";
+   `----
+  help: Consider removing this import.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'load'
+    ,-[src/components/modules/AdminProfileModule.tsx:39:32]
+ 38 | 
+ 39 |   useEffect(() => { load(); }, [token]);
+    :                     ^^|^       ^^^^^^^
+    :                       `-- useEffect uses `load` here
+ 40 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! react-hooks(exhaustive-deps): React Hook useEffect has a missing dependency: 'loadData'
+    ,-[src/components/panels/UserManagementPanel.tsx:93:6]
+ 89 |   useEffect(() => {
+ 90 |     loadData();
+    :     ^^^^|^^^
+    :         `-- useEffect uses `loadData` here
+ 91 |     window.addEventListener("mock-state-updated", loadData);
+ 92 |     return () => window.removeEventListener("mock-state-updated", loadData);
+ 93 |   }, [token, page, searchQuery, roleFilter]);
+    :      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 94 | 
+    `----
+  help: Either include it or remove the dependency array.
+
+  ! eslint(no-unused-vars): Variable 'Divider' is declared but never used. Unused variables should start with a '_'.
+     ,-[src/pages/Application/Application.tsx:384:7]
+ 383 | 
+ 384 | const Divider: React.FC<{ title: string; subtitle?: string }> = ({ title, subtitle }) => (
+     :       ^^^|^^^
+     :          `-- 'Divider' is declared here
+ 385 |   <div className="col-span-1 sm:col-span-2 pt-2">
+     `----
+  help: Consider removing this declaration.
+
+  ! react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+    ,-[src/pages/Application/Application.tsx:19:14]
+ 18 | 
+ 19 | export const COUNTRY_CODES: CountryOption[] = [
+    :              ^^^^^^^^^^^^^
+ 20 |   { code: "+91", iso: "IN", name: "India" },
+    `----
+
+  ! eslint(no-useless-escape): Unnecessary escape character '-'
+     ,-[src/pages/Application/Application.tsx:102:35]
+ 101 | // ΓöÇΓöÇ Validation helpers ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+ 102 | const ALPHA_RE = /^[a-zA-Z├Ç-├┐\s'\-]+$/;
+     :                                 ^^
+ 103 | const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+     `----
+  help: Replace `\-` with `-`.
+
+  ! eslint(no-useless-escape): Unnecessary escape character '-'
+     ,-[src/pages/Application/Application.tsx:104:27]
+ 103 | const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+ 104 | const DIGITS_RE = /^[0-9\s\-]*$/;
+     :                           ^^
+ 105 | const URL_RE = /^https?:\/\/.+/i;
+     `----
+  help: Replace `\-` with `-`.
+
+Found 54 warnings and 0 errors.
+Finished in 24ms on 46 files with 103 rules using 8 threads.

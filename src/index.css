@@ -1,0 +1,177 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-bg: #050505;
+  --color-brand-charcoal: #111111;
+  --color-brand-accent: #C5A059;
+  --color-brand-highlight: #E8C96F;
+  --color-brand-white: #F5F5F5;
+  --color-brand-gray: #A0A0A0;
+  
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Montserrat", sans-serif;
+}
+
+@layer base {
+  html, body {
+    background-color: #050505;
+    background-image: radial-gradient(circle at 50% 0%, #1a1612 0%, #050505 60%);
+    color: #F5F5F5;
+    font-family: "Montserrat", sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #120B10;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(216, 175, 69, 0.25);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D8AF45;
+}
+
+/* Glassmorphism utility */
+.glassmorphism {
+  background: rgba(17, 17, 17, 0.65);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(197, 160, 89, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.gold-text-glow {
+  text-shadow: 0 0 15px rgba(216, 175, 69, 0.35);
+}
+
+.gold-border-glow:hover {
+  box-shadow: 0 0 25px rgba(216, 175, 69, 0.12);
+  border-color: rgba(216, 175, 69, 0.25);
+}
+
+/* Hide standard cursor on desktop/mouse pointer devices for premium cursor custom experience */
+@media (pointer: fine) {
+  body.custom-cursor-active, body.custom-cursor-active a, body.custom-cursor-active button, body.custom-cursor-active select, body.custom-cursor-active textarea, body.custom-cursor-active input, body.custom-cursor-active [role="button"] {
+    cursor: none !important;
+  }
+}
+
+/* Custom animations for ambient lighting leaks and drifting glow */
+@keyframes floatSlowly {
+  0% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-30px) translateX(20px) rotate(180deg);
+  }
+  100% {
+    transform: translateY(0px) translateX(0px) rotate(360deg);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlowly 28s infinite linear;
+}
+
+.animate-float-slower {
+  animation: floatSlowly 38s infinite linear reverse;
+}
+
+/* Scrollbar hiding utility */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ── Hero Corner Decorations ─────────────────────── */
+
+/* Shimmer sweep along the gold line */
+@keyframes cornerShimmer {
+  0%   { stroke-dashoffset: 120; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { stroke-dashoffset: -120; opacity: 0; }
+}
+
+/* Particle gentle float + fade */
+@keyframes particleDrift {
+  0%   { opacity: 0;   transform: translate(0px, 0px) scale(1); }
+  30%  { opacity: 0.8; }
+  60%  { opacity: 0.5; transform: translate(var(--dx, 4px), var(--dy, -6px)) scale(1.3); }
+  100% { opacity: 0;   transform: translate(var(--dx2, 7px), var(--dy2, -12px)) scale(0.8); }
+}
+
+/* Page-load fade-in for the whole corner group */
+@keyframes cornerFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.hero-corner {
+  position: absolute;
+  pointer-events: none;
+  z-index: 15;
+  /* desktop */
+  width: clamp(44px, 6vw, 70px);
+  height: clamp(44px, 6vw, 70px);
+  animation: cornerFadeIn 2s ease forwards;
+}
+
+/* Position each corner */
+.hero-corner--tl { top: clamp(16px, 3vw, 28px);  left:  clamp(16px, 3vw, 28px); }
+.hero-corner--tr { top: clamp(16px, 3vw, 28px);  right: clamp(16px, 3vw, 28px); transform: scaleX(-1); }
+.hero-corner--bl { bottom: clamp(16px, 3vw, 28px); left:  clamp(16px, 3vw, 28px); transform: scaleY(-1); }
+.hero-corner--br { bottom: clamp(16px, 3vw, 28px); right: clamp(16px, 3vw, 28px); transform: scale(-1); }
+
+/* The shimmer line on each corner L-shape */
+.corner-shimmer-h {
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  animation: cornerShimmer 1.2s ease-in-out infinite;
+  animation-delay: var(--shimmer-delay, 0s);
+  animation-play-state: paused;
+}
+.corner-shimmer-v {
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  animation: cornerShimmer 1.2s ease-in-out infinite;
+  animation-delay: calc(var(--shimmer-delay, 0s) + 0.15s);
+  animation-play-state: paused;
+}
+/* Trigger shimmer every 7s via a wrapper animation that nudges play-state */
+.hero-corner:hover .corner-shimmer-h,
+.hero-corner:hover .corner-shimmer-v { animation-play-state: running; }
+
+/* Auto shimmer every 7 seconds (CSS-only trick) */
+@keyframes autoShimmerTrigger {
+  0%, 14.9%  { opacity: 1; }
+  15%, 30%   { opacity: 1; }
+  30.1%, 100%{ opacity: 1; }
+}
+.corner-line-group {
+  animation: autoShimmerTrigger 7s ease infinite;
+  animation-delay: var(--shimmer-delay, 0s);
+}
+.corner-line-group:is([data-shimmer]) .corner-shimmer-h,
+.corner-line-group:is([data-shimmer]) .corner-shimmer-v {
+  animation-play-state: running;
+}
+
+/* Particles */
+.corner-particle {
+  animation: particleDrift var(--pdur, 4s) ease-in-out infinite;
+  animation-delay: var(--pdelay, 0s);
+  opacity: 0;
+}

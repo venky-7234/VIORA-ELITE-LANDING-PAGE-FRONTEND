@@ -1,0 +1,21 @@
+{
+  "content": [
+    {
+      "id": 1,
+      "publicId": "INV-DEMO-001",
+      "applicationId": "APP-DEMO-001",
+      "eventId": "EVT-DEMO-001",
+      "invitationNumber": "INV-2026-001",
+      "guestName": "Aarav Mehta",
+      "guestEmail": "aarav@example.com",
+      "eventTitle": "The Imperium Founders Dine",
+      "token": "mock-invitation-001",
+      "status": "GENERATED",
+      "createdAt": "2026-01-21T10:00:00Z"
+    }
+  ],
+  "totalElements": 1,
+  "totalPages": 1,
+  "number": 0,
+  "size": 20
+}

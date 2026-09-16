@@ -1,0 +1,60 @@
+{
+  "content": [
+    {
+      "id": 1,
+      "publicId": "USR-DEMO-001",
+      "name": "Super Admin",
+      "email": "superadmin@imperium.com",
+      "role": "ROLE_SUPER_ADMIN",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 2,
+      "publicId": "USR-DEMO-002",
+      "name": "Lead Admin",
+      "email": "admin@imperium.com",
+      "role": "ROLE_ADMIN",
+      "status": "ACTIVE",
+      "assignedApplicationIds": ["APP-DEMO-004"]
+    },
+    {
+      "id": 3,
+      "publicId": "USR-DEMO-003",
+      "name": "VIP Guest",
+      "email": "guest@imperium.com",
+      "role": "ROLE_USER",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 4,
+      "publicId": "USR-DEMO-004",
+      "name": "Anika Admin",
+      "email": "anika@imperium.com",
+      "role": "ROLE_ADMIN",
+      "status": "INACTIVE",
+      "assignedEventIds": []
+    },
+    {
+      "id": 5,
+      "publicId": "USR-DEMO-005",
+      "name": "Dev User",
+      "email": "dev.user@example.com",
+      "role": "ROLE_USER",
+      "status": "SUSPENDED",
+      "assignedEventIds": []
+    },
+    {
+      "id": 6,
+      "publicId": "USR-DEMO-006",
+      "name": "Mira Manager",
+      "email": "manager@imperium.com",
+      "role": "ROLE_MANAGER",
+      "status": "ACTIVE",
+      "assignedApplicationIds": []
+    }
+  ],
+  "totalElements": 6,
+  "totalPages": 1,
+  "number": 0,
+  "size": 50
+}
