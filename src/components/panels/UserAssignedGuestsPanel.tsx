@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 import {
   Users, CheckCircle2, XCircle, Eye, Search,
   ChevronLeft, ChevronRight, MoreVertical, Clock,
@@ -113,7 +114,7 @@ export const UserAssignedGuestsPanel: React.FC<UserAssignedGuestsPanelProps> = (
   const saveNotes = () => {
     if (!notesModalGuest) return;
     localStorage.setItem(`viora_verification_notes_${notesModalGuest.publicId}`, guestNote);
-    toast?.success?.('Notes saved successfully.') || alert('Notes saved successfully.');
+    toast.success('Notes saved successfully.');
     setNotesModalGuest(null);
   };
 

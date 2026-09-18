@@ -22,9 +22,9 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 function safeDate(value: any): string {
-  if (!value) return "—";
+  if (!value) return "â€”";
   const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return "—";
+  if (Number.isNaN(d.getTime())) return "â€”";
   return d.toLocaleString(undefined, {
     day: "2-digit", month: "short", year: "numeric",
     hour: "2-digit", minute: "2-digit",
@@ -48,12 +48,12 @@ const DetailsModal: React.FC<{
   app: any; onClose: () => void;
   onApprove: () => void; onReject: () => void; busy: boolean;
 }> = ({ app, onClose, onApprove, onReject, busy }) => {
-  const fullName = app.full_name || app.firstName || [app.first_name, app.last_name].filter(Boolean).join(" ") || "—";
-  const appId = String(app.publicId || app.id || "—");
+  const fullName = app.full_name || app.firstName || [app.first_name, app.last_name].filter(Boolean).join(" ") || "â€”";
+  const appId = String(app.publicId || app.id || "â€”");
   const Field = ({ label, value }: { label: string; value?: React.ReactNode }) => (
     <div>
       <p className="text-[9px] font-bold text-[#555] uppercase tracking-widest mb-0.5">{label}</p>
-      <div className="text-sm text-[#DDD] break-words">{value || "—"}</div>
+      <div className="text-sm text-[#DDD] break-words">{value || "â€”"}</div>
     </div>
   );
   return (
@@ -152,7 +152,7 @@ const RejectModal: React.FC<{ onConfirm: (r: string) => void; onCancel: () => vo
             className="rounded-lg border border-[#2a2a2a] px-4 py-2 text-sm text-[#999] hover:bg-[#1a1a1a] disabled:opacity-50">Cancel</button>
           <button onClick={() => onConfirm(reason)} disabled={!reason.trim() || busy}
             className="rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-400 disabled:opacity-50">
-            {busy ? "Rejecting…" : "Reject Application"}
+            {busy ? "Rejectingâ€¦" : "Reject Application"}
           </button>
         </div>
       </motion.div>
@@ -258,11 +258,11 @@ const WebsiteApplicationsModuleBase: React.FC<{ token: string }> = ({ token }) =
             className="bg-[#0d0d0d] border border-[#1a1a1a] rounded-lg px-3 py-2 text-xs text-[#888] outline-none">
             <option value="createdAt:desc">Newest first</option>
             <option value="createdAt:asc">Oldest first</option>
-            <option value="status:asc">Status A–Z</option>
+            <option value="status:asc">Status Aâ€“Z</option>
           </select>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#555]" size={14} />
-            <input type="text" placeholder="Search name, email, phone, org…" value={searchQuery}
+            <input type="text" placeholder="Search name, email, phone, orgâ€¦" value={searchQuery}
               onChange={e => { setSearch(e.target.value); setPage(0); }}
               className="bg-[#0d0d0d] border border-[#1a1a1a] text-sm text-[#DDD] px-4 py-2 pl-9 rounded-lg focus:outline-none focus:border-[#C5A059]/40 transition-colors w-64" />
           </div>
@@ -284,7 +284,7 @@ const WebsiteApplicationsModuleBase: React.FC<{ token: string }> = ({ token }) =
               <tr><td colSpan={8} className="py-16 text-center">
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-6 h-6 border-2 border-[#C5A059] border-t-transparent rounded-full animate-spin" />
-                  <span className="text-xs text-[#555]">Loading website applications…</span>
+                  <span className="text-xs text-[#555]">Loading website applicationsâ€¦</span>
                 </div>
               </td></tr>
             )}
@@ -299,7 +299,7 @@ const WebsiteApplicationsModuleBase: React.FC<{ token: string }> = ({ token }) =
             )}
             {!loading && !error && displayApplications.map(app => {
               const appId = String(app.publicId || app.id || "");
-              const fullName = app.full_name || app.firstName || [app.first_name, app.last_name].filter(Boolean).join(" ") || "—";
+              const fullName = app.full_name || app.firstName || [app.first_name, app.last_name].filter(Boolean).join(" ") || "â€”";
               const sub = app.submitted_at || app.createdAt || app.created_at;
               return (
                 <motion.tr key={appId} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="hover:bg-[#111]/50 transition-colors">
@@ -314,16 +314,16 @@ const WebsiteApplicationsModuleBase: React.FC<{ token: string }> = ({ token }) =
                       <div>
                         <p className="text-sm text-[#DDD] font-medium leading-tight">{fullName}</p>
                         {(app.profession || app.city) && (
-                          <p className="text-[11px] text-[#555]">{[app.profession, app.city].filter(Boolean).join(" · ")}</p>
+                          <p className="text-[11px] text-[#555]">{[app.profession, app.city].filter(Boolean).join(" Â· ")}</p>
                         )}
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-3.5"><span className="text-xs text-[#AAA]">{app.email || "—"}</span></td>
-                  <td className="px-4 py-3.5"><span className="text-xs text-[#AAA]">{app.phone || "—"}</span></td>
-                  <td className="px-4 py-3.5"><span className="text-xs text-[#AAA]">{app.organization || app.company || "—"}</span></td>
+                  <td className="px-4 py-3.5"><span className="text-xs text-[#AAA]">{app.email || "â€”"}</span></td>
+                  <td className="px-4 py-3.5"><span className="text-xs text-[#AAA]">{app.phone || "â€”"}</span></td>
+                  <td className="px-4 py-3.5"><span className="text-xs text-[#AAA]">{app.organization || app.company || "â€”"}</span></td>
                   <td className="px-4 py-3.5">
-                    <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-full border ${STATUS_STYLES[app.status] || "bg-gray-500/10 text-gray-400 border-gray-500/20"}`}>{app.status || "—"}</span>
+                    <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-full border ${STATUS_STYLES[app.status] || "bg-gray-500/10 text-gray-400 border-gray-500/20"}`}>{app.status || "â€”"}</span>
                   </td>
                   <td className="px-4 py-3.5"><span className="text-xs text-[#666]">{safeDate(sub)}</span></td>
                   <td className="px-4 py-3.5">
@@ -356,7 +356,7 @@ const WebsiteApplicationsModuleBase: React.FC<{ token: string }> = ({ token }) =
         <div className="flex items-center justify-between px-5 py-3 border-t border-[#1a1a1a] bg-[#0a0a0a]">
           <span className="text-xs text-[#555]">
             {totalElements > 0
-              ? `${page * 50 + 1}–${Math.min((page + 1) * 50, totalElements)} of ${totalElements}`
+              ? `${page * 50 + 1}â€“${Math.min((page + 1) * 50, totalElements)} of ${totalElements}`
               : `${displayApplications.length} application${displayApplications.length !== 1 ? "s" : ""}`}
           </span>
           <div className="flex gap-2">
