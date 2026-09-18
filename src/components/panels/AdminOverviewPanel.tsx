@@ -82,17 +82,17 @@ export const AdminOverviewPanel: React.FC<AdminOverviewPanelProps> = ({ token, o
     ? [
         { label: "Assigned Events",  value: assignedEventsCount,                   icon: Calendar,     color: "text-purple-400",  bg: "bg-purple-500/5",  border: "border-purple-500/20",  tab: "events",        filter: undefined },
         { label: "Assigned Guests",  value: stats?.assignedGuests        || 0, icon: Users,        color: "text-blue-400",    bg: "bg-blue-500/5",    border: "border-blue-500/20",    tab: "guests",        filter: undefined },
-        { label: "Pending Review",   value: stats?.pendingApplications   || 0, icon: Clock,        color: "text-yellow-400",  bg: "bg-yellow-500/5",  border: "border-yellow-500/20",  tab: "applications",  filter: 'PENDING' },
-        { label: "Approved Guests",  value: stats?.approvedApplications  || 0, icon: CheckCircle2, color: "text-emerald-400", bg: "bg-emerald-500/5", border: "border-emerald-500/20", tab: "applications",  filter: 'APPROVED' },
-        { label: "Rejected Guests",  value: stats?.rejectedApplications  || 0, icon: XCircle,      color: "text-red-400",     bg: "bg-red-500/5",     border: "border-red-500/20",     tab: "applications",  filter: 'REJECTED' },
+        { label: "Pending Review",   value: stats?.pendingApplications   || 0, icon: Clock,        color: "text-yellow-400",  bg: "bg-yellow-500/5",  border: "border-yellow-500/20",  tab: "imperium-applications",  filter: 'PENDING' },
+        { label: "Approved Guests",  value: stats?.approvedApplications  || 0, icon: CheckCircle2, color: "text-emerald-400", bg: "bg-emerald-500/5", border: "border-emerald-500/20", tab: "imperium-applications",  filter: 'APPROVED' },
+        { label: "Rejected Guests",  value: stats?.rejectedApplications  || 0, icon: XCircle,      color: "text-red-400",     bg: "bg-red-500/5",     border: "border-red-500/20",     tab: "imperium-applications",  filter: 'REJECTED' },
       ]
     : [
         { label: "Assigned Guests",  value: stats?.assignedGuests        || 0, icon: Users,        color: "text-blue-400",    bg: "bg-blue-500/5",    border: "border-blue-500/20",    tab: "guests",        filter: undefined },
-        { label: "Pending",          value: stats?.pendingApplications   || 0, icon: Clock,        color: "text-yellow-400",  bg: "bg-yellow-500/5",  border: "border-yellow-500/20",  tab: "applications",  filter: 'PENDING' },
-        { label: "Approved",         value: stats?.approvedApplications  || 0, icon: CheckCircle2, color: "text-emerald-400", bg: "bg-emerald-500/5", border: "border-emerald-500/20", tab: "applications",  filter: 'APPROVED' },
-        { label: "Rejected",         value: stats?.rejectedApplications  || 0, icon: XCircle,      color: "text-red-400",     bg: "bg-red-500/5",     border: "border-red-500/20",     tab: "applications",  filter: 'REJECTED' },
+        { label: "Pending",          value: stats?.pendingApplications   || 0, icon: Clock,        color: "text-yellow-400",  bg: "bg-yellow-500/5",  border: "border-yellow-500/20",  tab: "imperium-applications",  filter: 'PENDING' },
+        { label: "Approved",         value: stats?.approvedApplications  || 0, icon: CheckCircle2, color: "text-emerald-400", bg: "bg-emerald-500/5", border: "border-emerald-500/20", tab: "imperium-applications",  filter: 'APPROVED' },
+        { label: "Rejected",         value: stats?.rejectedApplications  || 0, icon: XCircle,      color: "text-red-400",     bg: "bg-red-500/5",     border: "border-red-500/20",     tab: "imperium-applications",  filter: 'REJECTED' },
         { label: "Invitations Sent", value: stats?.generatedInvitations  || 0, icon: CalendarDays, color: "text-[#C5A059]",   bg: "bg-[#C5A059]/5",   border: "border-[#C5A059]/20",   tab: "invitations",   filter: undefined },
-        { label: "Today's Tasks",    value: stats?.todaysApplications    || 0, icon: Activity,     color: "text-purple-400",  bg: "bg-purple-500/5",  border: "border-purple-500/20",  tab: "applications",  filter: undefined },
+        { label: "Today's Tasks",    value: stats?.todaysApplications    || 0, icon: Activity,     color: "text-purple-400",  bg: "bg-purple-500/5",  border: "border-purple-500/20",  tab: "imperium-applications",  filter: undefined },
       ];
 
   return (

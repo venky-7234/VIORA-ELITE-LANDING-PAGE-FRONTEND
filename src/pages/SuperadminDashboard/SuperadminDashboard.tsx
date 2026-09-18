@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LogOut, Users, FileText, Activity, LayoutDashboard,
   CalendarDays, Mail, Shield, BarChart3, Settings,
-  Bell, Menu, X, UserCircle, UserPlus, User, Clock, CheckCircle2, XCircle
+  Bell, Menu, X, UserCircle, UserPlus, Clock, CheckCircle2, XCircle,
+  ChevronDown, ChevronRight, Globe
 } from "lucide-react";
 import { fetchDashboardStats, fetchAuditLogs, fetchEvents, fetchUnreadNotificationCount, getUserProfile } from '../../services/api';
 import { ApplicationsModule } from '../../components/modules/ApplicationsModule';
@@ -17,6 +18,7 @@ import { UserManagementPanel } from '../../components/panels/UserManagementPanel
 import { UserNotificationPanel } from '../../components/panels/UserNotificationPanel';
 import { LogoutModal } from '../../components/common/LogoutModal';
 import { SuperAdminTasksPanel } from '../../components/panels/SuperAdminTasksPanel';
+import { WebsiteApplicationsModule } from '../../components/modules/WebsiteApplicationsModule';
 
 interface SuperadminDashboardProps {
   token: string;
@@ -28,6 +30,8 @@ type TabType =
   | "overview"
   | "events"
   | "applications"
+  | "imperium-applications"
+  | "website-applications"
   | "invitations"
   | "admins"
   | "users"
@@ -35,6 +39,29 @@ type TabType =
   | "notifications"
   | "tasks"
   | "settings";
+
+// â”€â”€ Safe date formatter â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function formatActivityDate(log: any): string {
+  // Try multiple possible timestamp field names the backend might use
+  const raw =
+    log?.createdAt ??
+    log?.created_at ??
+    log?.timestamp ??
+    log?.activity_at ??
+    log?.updatedAt ??
+    log?.updated_at ??
+    null;
+
+  if (!raw) return "â€”";
+  const date = new Date(raw);
+  if (Number.isNaN(date.getTime())) return "â€”";
+  return date.toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
 export const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ token, onLogout, processedLogo }) => {
   const [activeTab, setActiveTab] = useState<TabType>("overview");
@@ -45,6 +72,8 @@ export const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ token,
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [initialAppTab, setInitialAppTab] = useState<string>('ALL');
+  // Tracks whether the Applications submenu is expanded in the sidebar
+  const [appsExpanded, setAppsExpanded] = useState(false);
 
   const fetchProfile = async () => {
     try {
@@ -103,18 +132,28 @@ export const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ token,
     }
   }, [token, onLogout]);
 
-  const navItems = [
-    { id: "overview",       label: "Dashboard",     icon: LayoutDashboard },
-    { id: "events",         label: "Events",         icon: CalendarDays },
-    { id: "applications",   label: "Applications",   icon: FileText },
-    { id: "invitations",    label: "Invitations",    icon: Mail },
-    { id: "admins",         label: "Admins",         icon: Shield },
-    { id: "users",          label: "Users",          icon: UserPlus },
-    { id: "analytics",      label: "Analytics",      icon: BarChart3 },
-    { id: "notifications",  label: "Notifications",  icon: Bell },
-    { id: "tasks",          label: "Tasks",          icon: CheckCircle2 },
-    { id: "settings",       label: "Settings",       icon: Settings },
-  ] as const;
+  // All nav items (flat) â€” used for tabLabel lookup
+  const allNavItems = [
+    { id: "overview",               label: "Dashboard" },
+    { id: "events",                 label: "Events" },
+    { id: "applications",           label: "Applications" },
+    { id: "imperium-applications",  label: "Imperium Applications" },
+    { id: "website-applications",   label: "Website Applications" },
+    { id: "invitations",            label: "Invitations" },
+    { id: "admins",                 label: "Admins" },
+    { id: "users",                  label: "Users" },
+    { id: "analytics",              label: "Analytics" },
+    { id: "notifications",          label: "Notifications" },
+    { id: "tasks",                  label: "Tasks" },
+    { id: "settings",               label: "Settings" },
+  ];
+
+  // Keep Applications submenu expanded whenever an applications sub-tab is active
+  useEffect(() => {
+    if (activeTab === "imperium-applications" || activeTab === "website-applications") {
+      setAppsExpanded(true);
+    }
+  }, [activeTab]);
 
   const handleTabClick = React.useCallback((tabId: TabType, statusFilter?: string) => {
     if (statusFilter) setInitialAppTab(statusFilter);
@@ -127,6 +166,18 @@ export const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ token,
   const handleOpenGuestProfile = React.useCallback((id: string) => {
     setDashboardSelectedGuestId(id);
   }, []);
+
+  const isAppSubTab = activeTab === "imperium-applications" || activeTab === "website-applications";
+
+  const navBtnClass = (isActive: boolean) =>
+    `w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group relative ${
+      isActive
+        ? "bg-[#C5A059]/10 text-[#C5A059] border-l-2 border-[#C5A059]"
+        : "text-[#777] hover:text-[#CCC] hover:bg-[#111] border-l-2 border-transparent"
+    }`;
+
+  const navIconClass = (isActive: boolean) =>
+    `shrink-0 transition-colors ${isActive ? "text-[#C5A059]" : "text-[#555] group-hover:text-[#999]"}`;
 
   const renderSidebar = () => (
     <>
@@ -144,23 +195,95 @@ export const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ token,
         <p className="text-[9px] font-bold text-[#555] uppercase tracking-[0.25em] mb-4 px-3">
           Super Admin
         </p>
-        {navItems.map(item => {
+
+        {/* Dashboard */}
+        <button onClick={() => handleTabClick("overview")} className={navBtnClass(activeTab === "overview")}>
+          <LayoutDashboard size={16} className={navIconClass(activeTab === "overview")} />
+          <span className="text-sm font-medium tracking-wide">Dashboard</span>
+        </button>
+
+        {/* Events */}
+        <button onClick={() => handleTabClick("events")} className={navBtnClass(activeTab === "events")}>
+          <CalendarDays size={16} className={navIconClass(activeTab === "events")} />
+          <span className="text-sm font-medium tracking-wide">Events</span>
+        </button>
+
+        {/* Applications â€” Collapsible Parent */}
+        <div>
+          <button
+            onClick={() => setAppsExpanded(prev => !prev)}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group relative border-l-2 ${
+              isAppSubTab
+                ? "bg-[#C5A059]/10 text-[#C5A059] border-[#C5A059]"
+                : "text-[#777] hover:text-[#CCC] hover:bg-[#111] border-transparent"
+            }`}
+          >
+            <FileText size={16} className={`shrink-0 transition-colors ${isAppSubTab ? "text-[#C5A059]" : "text-[#555] group-hover:text-[#999]"}`} />
+            <span className="text-sm font-medium tracking-wide flex-1 text-left">Applications</span>
+            {appsExpanded
+              ? <ChevronDown size={14} className="shrink-0 text-[#555]" />
+              : <ChevronRight size={14} className="shrink-0 text-[#555]" />
+            }
+          </button>
+
+          <AnimatePresence initial={false}>
+            {appsExpanded && (
+              <motion.div
+                key="apps-submenu"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.18, ease: "easeInOut" }}
+                className="overflow-hidden"
+              >
+                <div className="mt-0.5 ml-4 pl-3 border-l border-[#1a1a1a] space-y-0.5">
+                  <button
+                    onClick={() => handleTabClick("imperium-applications")}
+                    className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all duration-200 group ${
+                      activeTab === "imperium-applications"
+                        ? "bg-[#C5A059]/10 text-[#C5A059]"
+                        : "text-[#666] hover:text-[#CCC] hover:bg-[#111]"
+                    }`}
+                  >
+                    <FileText size={13} className={`shrink-0 ${activeTab === "imperium-applications" ? "text-[#C5A059]" : "text-[#444] group-hover:text-[#888]"}`} />
+                    <span className="text-xs font-medium tracking-wide">Imperium Applications</span>
+                  </button>
+                  <button
+                    onClick={() => handleTabClick("website-applications")}
+                    className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all duration-200 group ${
+                      activeTab === "website-applications"
+                        ? "bg-[#C5A059]/10 text-[#C5A059]"
+                        : "text-[#666] hover:text-[#CCC] hover:bg-[#111]"
+                    }`}
+                  >
+                    <Globe size={13} className={`shrink-0 ${activeTab === "website-applications" ? "text-[#C5A059]" : "text-[#444] group-hover:text-[#888]"}`} />
+                    <span className="text-xs font-medium tracking-wide">Website Applications</span>
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Remaining top-level items */}
+        {([
+          { id: "invitations",   label: "Invitations",  icon: Mail },
+          { id: "admins",        label: "Admins",        icon: Shield },
+          { id: "users",         label: "Users",         icon: UserPlus },
+          { id: "analytics",     label: "Analytics",     icon: BarChart3 },
+          { id: "notifications", label: "Notifications", icon: Bell },
+          { id: "tasks",         label: "Tasks",         icon: CheckCircle2 },
+          { id: "settings",      label: "Settings",      icon: Settings },
+        ] as const).map(item => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
           return (
             <button
               key={item.id}
               onClick={() => handleTabClick(item.id as TabType)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group relative ${
-                isActive
-                  ? "bg-[#C5A059]/10 text-[#C5A059] border-l-2 border-[#C5A059]"
-                  : "text-[#777] hover:text-[#CCC] hover:bg-[#111] border-l-2 border-transparent"
-              }`}
+              className={navBtnClass(isActive)}
             >
-              <Icon
-                size={16}
-                className={`shrink-0 transition-colors ${isActive ? "text-[#C5A059]" : "text-[#555] group-hover:text-[#999]"}`}
-              />
+              <Icon size={16} className={navIconClass(isActive)} />
               <span className="text-sm font-medium tracking-wide">{item.label}</span>
               {item.id === "notifications" && unreadCount > 0 && (
                 <span className="ml-auto bg-[#C5A059] text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
@@ -211,6 +334,25 @@ export const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ token,
             />
           </div>
         );
+      case "imperium-applications":
+        return (
+          <div className={visible} key="imperium-applications">
+            <ApplicationsModule
+              token={token}
+              onOpenGuestProfile={handleOpenGuestProfile}
+              applicationType="imperium"
+              initialTab={initialAppTab as any}
+            />
+          </div>
+        );
+      case "website-applications":
+        return (
+          <div className={visible} key="website-applications">
+            <div className="p-6">
+              <WebsiteApplicationsModule token={token} />
+            </div>
+          </div>
+        );
       case "invitations":
         return (
           <div className={visible} key="invitations">
@@ -258,7 +400,7 @@ export const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ token,
     }
   };
 
-  const tabLabel = navItems.find(n => n.id === activeTab)?.label ?? activeTab;
+  const tabLabel = allNavItems.find(n => n.id === activeTab)?.label ?? activeTab;
 
   return (
     <div className="h-screen bg-[#050505] text-[#F5F5F5] font-['Montserrat',sans-serif] flex overflow-hidden">
@@ -344,7 +486,9 @@ export const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ token,
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden">
-          {navItems.map(item => renderTab(item.id as TabType))}
+          {(["overview", "events", "applications", "imperium-applications", "website-applications",
+             "invitations", "admins", "users", "analytics", "notifications", "tasks", "settings"] as TabType[])
+            .map(id => renderTab(id))}
         </div>
       </main>
 
@@ -373,7 +517,7 @@ export const SuperadminDashboard: React.FC<SuperadminDashboardProps> = ({ token,
   );
 };
 
-// ─── Overview Panel ──────────────────────────────────────────────────────────
+// â”€â”€â”€ Overview Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const OverviewPanel = ({
   token,
@@ -503,9 +647,7 @@ const OverviewPanel = ({
                 </span>
                 <span className="text-xs text-[#999] flex-1 truncate">{log.description}</span>
                 <span className="text-[10px] text-[#555] shrink-0">
-                  {new Date(log.createdAt).toLocaleString(undefined, {
-                    month: "short", day: "numeric", hour: "2-digit", minute: "2-digit"
-                  })}
+                  {formatActivityDate(log)}
                 </span>
               </div>
             ))

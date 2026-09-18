@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LogOut, FileText, Users, BarChart3, Menu, X, UserCircle,
-  LayoutDashboard, Mail, User, Bell, CalendarDays
+  LayoutDashboard, Mail, User, Bell, CalendarDays, Globe
 } from "lucide-react";
 import { ApplicationsModule } from '../../components/modules/ApplicationsModule';
 import { GuestsModule } from '../../components/modules/GuestsModule';
@@ -26,7 +26,8 @@ interface AdminDashboardProps {
 type TabType =
   | "dashboard"
   | "events"
-  | "applications"
+  | "imperium-applications"
+  | "website-applications"
   | "invitations"
   | "guests"
   | "notifications"
@@ -106,7 +107,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     { id: "dashboard",     label: "Dashboard",       icon: LayoutDashboard },
     { id: "events",        label: "Assigned Events",  icon: CalendarDays },
     { id: "guests",        label: "Assigned Guests",  icon: Users },
-    { id: "applications",  label: "Applications",     icon: FileText },
+    { id: "imperium-applications",  label: "Imperium Applications",     icon: FileText },
+    { id: "website-applications",  label: "Website Applications",     icon: Globe },
     { id: "invitations",   label: "Invitations",      icon: Mail },
     { id: "notifications", label: "Notifications",    icon: Bell },
     { id: "profile",       label: "Profile",          icon: User },
@@ -200,14 +202,27 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <AdminAssignedEventsModule token={token} canAssignMembers />
           </div>
         );
-      case "applications":
+      case "imperium-applications":
         return (
-          <div className={visible} key="applications">
+          <div className={visible} key="imperium-applications">
             <ApplicationsModule
               token={token}
               onOpenGuestProfile={handleOpenGuestProfile}
               adminMode={true}
               initialTab={initialAppTab as any}
+              applicationType="imperium"
+            />
+          </div>
+        );
+      case "website-applications":
+        return (
+          <div className={visible} key="website-applications">
+            <ApplicationsModule
+              token={token}
+              onOpenGuestProfile={handleOpenGuestProfile}
+              adminMode={true}
+              initialTab={initialAppTab as any}
+              applicationType="website"
             />
           </div>
         );

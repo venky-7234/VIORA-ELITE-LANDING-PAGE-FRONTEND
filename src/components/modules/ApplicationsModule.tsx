@@ -5,7 +5,9 @@ import {
   UserPlus, Eye, MoreVertical, CheckSquare, Square, Download
 } from 'lucide-react';
 import {
-  searchApplications, approveApplication, rejectApplication,
+  getImperiumApplications, getWebsiteApplications,
+  getImperiumApplicationSummary, getWebsiteApplicationSummary,
+  approveApplication, rejectApplication,
   bulkApproveApplications, bulkRejectApplications,
   assignAdmin, fetchAdmins, getApplicationStreamUrl
 } from '../../services/api';
@@ -18,6 +20,7 @@ interface ApplicationsModuleProps {
   /** When true, shows only applications assigned to the signed-in admin. */
   adminMode?: boolean;
   initialTab?: StatusTab;
+  applicationType?: 'imperium' | 'website';
 }
 
 type StatusTab = 'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'WAITLISTED';
@@ -30,7 +33,7 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
-  token, onOpenGuestProfile, eventId, adminMode = false, initialTab = 'ALL'
+  token, onOpenGuestProfile, eventId, adminMode = false, initialTab = 'ALL', applicationType = 'imperium'
 }) => {
   const [activeTab, setActiveTab]   = useState<StatusTab>(initialTab);
   const [applications, setApps]     = useState<any[]>([]);
@@ -41,6 +44,7 @@ const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
   const [searchQuery, setSearch]    = useState('');
   const [selectedIds, setSelected]  = useState<Set<string>>(new Set());
   const [admins, setAdmins]         = useState<any[]>([]);
+  const [summary, setSummary]       = useState({ total: 0, pending: 0, approved: 0, rejected: 0 });
   const [openMenuId, setOpenMenu]   = useState<string | null>(null);
   const [assignDropdownFor, setAssignDD] = useState<string | null>(null);
   const rawUser = localStorage.getItem('user');
@@ -93,7 +97,8 @@ const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
       if (eventId) req.event_id = eventId;
       if (adminMode) req.assignedToMe = true;
 
-      const res = await searchApplications(req, page, 20, 'createdAt', 'DESC', token);
+      const fetchFn = applicationType === 'website' ? getWebsiteApplications : getImperiumApplications;
+      const res = await fetchFn(req, page, 20, sort, sortDir === 'desc' ? 'DESC' : 'ASC', token);
       
       let apps = [];
       let total = 0;
@@ -120,7 +125,19 @@ const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
     finally { setLoading(false); }
   };
 
-  useEffect(() => { fetchApps(); }, [page, activeTab, searchQuery, token, eventId]);
+  const fetchSummary = async () => {
+    try {
+      const fetchFn = applicationType === 'website' ? getWebsiteApplicationSummary : getImperiumApplicationSummary;
+      const res = await fetchFn(token);
+      if (res && res.data) {
+        setSummary(res.data);
+      }
+    } catch (err) {
+      console.warn("Failed to fetch summary", err);
+    }
+  };
+
+  useEffect(() => { fetchApps(); fetchSummary(); }, [page, activeTab, searchQuery, token, eventId, sort, sortDir, applicationType]);
   useEffect(() => {
     fetchAdmins(token)
       .then(r => {
@@ -228,7 +245,7 @@ const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
     setOpenMenu(null);
     setBusyAction(`approve:${id}`);
     try { await approveApplication(id, token); } catch { toast.error('Approval failed'); }
-    finally { setBusyAction(null); fetchApps(); }
+    finally { setBusyAction(null); fetchApps(); fetchSummary(); }
   };
   const handleReject = async (id: string) => {
     if (busyAction) return;
@@ -245,7 +262,7 @@ const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
       setRejectTarget(null);
       setRejectionReason('');
     } catch { toast.error('Rejection failed'); }
-    finally { setBusyAction(null); fetchApps(); }
+    finally { setBusyAction(null); fetchApps(); fetchSummary(); }
   };
   const handleAssign = async (appId: string, adminId: string) => {
     if (busyAction) return;
@@ -259,7 +276,7 @@ const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
     if (!selectedIds.size || busyAction) return;
     setBusyAction('bulk-approve');
     try { await bulkApproveApplications(Array.from(selectedIds), token); setSelected(new Set()); } catch { toast.error('Bulk approve failed'); }
-    finally { setBusyAction(null); fetchApps(); }
+    finally { setBusyAction(null); fetchApps(); fetchSummary(); }
   };
   const handleBulkReject = async () => {
     if (!selectedIds.size || busyAction) return;
@@ -275,7 +292,7 @@ const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
       setRejectTarget(null);
       setRejectionReason('');
     } catch { toast.error('Bulk reject failed'); }
-    finally { setBusyAction(null); fetchApps(); }
+    finally { setBusyAction(null); fetchApps(); fetchSummary(); }
   };
 
   const TABS: StatusTab[] = ['ALL', 'PENDING', 'APPROVED', 'REJECTED', 'WAITLISTED'];
@@ -290,7 +307,7 @@ const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-[#F5F5F5]">Applications</h2>
+          <h2 className="text-lg font-semibold text-[#F5F5F5]">{applicationType === 'website' ? 'Website Applications' : 'Imperium Applications'}</h2>
           <p className="text-xs text-[#555] mt-0.5">Review and process guest applications.</p>
         </div>
         {selectedIds.size > 0 && (
@@ -310,6 +327,26 @@ const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
             </button>
           </div>
         )}
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-4">
+          <p className="text-[10px] text-[#555] uppercase tracking-widest font-semibold mb-1">Total</p>
+          <p className="text-2xl font-light text-blue-400">{summary.total || 0}</p>
+        </div>
+        <div className="bg-yellow-500/5 border border-yellow-500/20 rounded-xl p-4">
+          <p className="text-[10px] text-[#555] uppercase tracking-widest font-semibold mb-1">Pending</p>
+          <p className="text-2xl font-light text-yellow-400">{summary.pending || 0}</p>
+        </div>
+        <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-4">
+          <p className="text-[10px] text-[#555] uppercase tracking-widest font-semibold mb-1">Approved</p>
+          <p className="text-2xl font-light text-emerald-400">{summary.approved || 0}</p>
+        </div>
+        <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-4">
+          <p className="text-[10px] text-[#555] uppercase tracking-widest font-semibold mb-1">Rejected</p>
+          <p className="text-2xl font-light text-red-400">{summary.rejected || 0}</p>
+        </div>
       </div>
 
       {/* Tabs + Search */}
@@ -358,7 +395,7 @@ const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
               </th>
               <th className="px-4 py-3 text-[10px] font-bold text-[#555] uppercase tracking-widest">ID</th>
               <th className="px-4 py-3 text-[10px] font-bold text-[#555] uppercase tracking-widest">Guest</th>
-              <th className="px-4 py-3 text-[10px] font-bold text-[#555] uppercase tracking-widest">Event</th>
+              {applicationType !== 'website' && <th className="px-4 py-3 text-[10px] font-bold text-[#555] uppercase tracking-widest">Event</th>}
               <th className="px-4 py-3 text-[10px] font-bold text-[#555] uppercase tracking-widest">Status</th>
               <th className="px-4 py-3 text-[10px] font-bold text-[#555] uppercase tracking-widest">Assigned To</th>
               <th className="px-4 py-3 text-[10px] font-bold text-[#555] uppercase tracking-widest">Current Phase</th>
@@ -368,7 +405,7 @@ const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
           <tbody className="divide-y divide-[#111]">
             {applications.length === 0 ? (
               <tr>
-                <td colSpan={8} className="py-16 text-center text-sm">
+                <td colSpan={applicationType === 'website' ? 7 : 8} className="py-16 text-center text-sm">
                   {loading ? <span className="text-[#555]">Loading…</span> : error ? <button onClick={fetchApps} className="text-red-300 hover:text-red-100">{error} Retry</button> : <span className="text-[#555]">No applications found.</span>}
                 </td>
               </tr>
@@ -406,10 +443,12 @@ const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
                     </div>
                   </div>
                 </td>
-                <td className="px-4 py-3.5">
-                  <p className="text-xs text-[#DDD]">{app.eventTitle || '—'}</p>
-                  <p className="text-[11px] text-[#555]">{app.createdAt ? new Date(app.createdAt).toLocaleDateString() : ''}</p>
-                </td>
+                {applicationType !== 'website' && (
+                  <td className="px-4 py-3.5">
+                    <p className="text-xs text-[#DDD]">{app.eventTitle || '—'}</p>
+                    <p className="text-[11px] text-[#555]">{app.createdAt ? new Date(app.createdAt).toLocaleDateString() : ''}</p>
+                  </td>
+                )}
                 <td className="px-4 py-3.5">
                   <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-full border ${STATUS_STYLES[app.status] || 'bg-gray-500/10 text-gray-400 border-gray-500/20'}`}>
                     {app.status}

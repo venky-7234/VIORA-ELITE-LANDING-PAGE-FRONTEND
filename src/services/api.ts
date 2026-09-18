@@ -205,6 +205,76 @@ export const searchApplications = async (filters: any, page = 0, size = 50, sort
   };
 };
 
+export const getImperiumApplications = async (filters: any, page = 0, size = 50, sortBy = 'createdAt', sortDir = 'DESC', token: string) => {
+  const queryParams = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+    sortBy,
+    sortDir,
+  });
+
+  if (filters.status && filters.status !== 'ALL') queryParams.append('status', filters.status);
+  if (filters.query) queryParams.append('query', filters.query);
+
+  const response = await fetch(`${BASE_URL}/applications/imperium?${queryParams.toString()}`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  
+  if (!response.ok) throw new Error('Failed to fetch Imperium applications');
+  const result = await response.json();
+
+  return {
+    ...result,
+    data: {
+      ...result.data,
+      content: (result.data?.content ?? result.data ?? []).map(normalizeApplication),
+    },
+  };
+};
+
+export const getWebsiteApplications = async (filters: any, page = 0, size = 50, sortBy = 'createdAt', sortDir = 'DESC', token: string) => {
+  const queryParams = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+    sortBy,
+    sortDir,
+  });
+
+  if (filters.status && filters.status !== 'ALL') queryParams.append('status', filters.status);
+  if (filters.query) queryParams.append('query', filters.query);
+
+  const response = await fetch(`${BASE_URL}/applications/website?${queryParams.toString()}`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  
+  if (!response.ok) throw new Error('Failed to fetch Website applications');
+  const result = await response.json();
+
+  return {
+    ...result,
+    data: {
+      ...result.data,
+      content: (result.data?.content ?? result.data ?? []).map(normalizeApplication),
+    },
+  };
+};
+
+export const getImperiumApplicationSummary = async (token: string) => {
+  const response = await fetch(`${BASE_URL}/applications/imperium/summary`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  if (!response.ok) throw new Error('Failed to fetch Imperium summary');
+  return response.json();
+};
+
+export const getWebsiteApplicationSummary = async (token: string) => {
+  const response = await fetch(`${BASE_URL}/applications/website/summary`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  if (!response.ok) throw new Error('Failed to fetch Website summary');
+  return response.json();
+};
+
 export const approveApplication = async (publicId: string, token: string) => {
   const response = await fetch(`${BASE_URL}/applications/${publicId}/approve`, {
     method: 'POST',
