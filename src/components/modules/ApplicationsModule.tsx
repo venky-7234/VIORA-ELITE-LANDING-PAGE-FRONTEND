@@ -90,39 +90,82 @@ const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
   const fetchApps = async () => {
     setLoading(true);
     setError(null);
+
     try {
       const req: any = {};
-      if (searchQuery) req.query = searchQuery;
+
+      if (searchQuery.trim()) req.query = searchQuery.trim();
       if (activeTab !== 'ALL') req.status = activeTab;
       if (eventId) req.event_id = eventId;
       if (adminMode) req.assignedToMe = true;
 
       const fetchFn = applicationType === 'website' ? getWebsiteApplications : getImperiumApplications;
-      const res = await fetchFn(req, page, 20, sort, sortDir === 'desc' ? 'DESC' : 'ASC', token);
-      
-      let apps = [];
-      let total = 0;
+      const res = await fetchFn(
+        req,
+        page,
+        20,
+        sort,
+        sortDir === 'desc' ? 'DESC' : 'ASC',
+        token
+      );
+
+      let apps: any[] = [];
+
       if (Array.isArray(res)) {
         apps = res;
       } else if (res && typeof res === 'object') {
         apps = res.data?.content || res.content || res.data || res.applications || [];
       }
-      
-      // Frontend fallback: if adminMode is true, ensure we only display assigned applications
+
+      if (!Array.isArray(apps)) apps = [];
+
+      // Frontend fallback: if adminMode is true, ensure we only display assigned applications.
       const currentUserId = user ? (user.id || user.publicId) : null;
       if (adminMode && currentUserId) {
-        apps = apps.filter((app: any) => 
-          String(app.assignedAdminId) === String(currentUserId) || 
+        apps = apps.filter((app: any) =>
+          String(app.assignedAdminId) === String(currentUserId) ||
           String(app.assigned_admin_id) === String(currentUserId)
         );
       }
-      
-      total = res.data?.totalElements ?? res.totalElements ?? res.total ?? apps.length;
+
+      // Status safeguard: never show rows that do not match the selected tab,
+      // even if the backend ignores the status query parameter.
+      if (activeTab !== 'ALL') {
+        apps = apps.filter((app: any) =>
+          String(app.status || '').trim().toUpperCase() === activeTab
+        );
+      }
+
+      // Search safeguard in case the backend does not apply the search query.
+      if (searchQuery.trim()) {
+        const query = searchQuery.trim().toLowerCase();
+
+        apps = apps.filter((app: any) => {
+          const name = String(
+            app.full_name ||
+            app.firstName ||
+            [app.first_name, app.last_name].filter(Boolean).join(' ') ||
+            ''
+          ).toLowerCase();
+          const email = String(app.email || '').toLowerCase();
+          const organization = String(app.organization || app.company || '').toLowerCase();
+
+          return name.includes(query) || email.includes(query) || organization.includes(query);
+        });
+      }
+
+      const serverTotal = res?.data?.totalElements ?? res?.totalElements ?? res?.total ?? apps.length;
 
       setApps(apps);
-      setTotal(total);
-    } catch { setError('Unable to load applications. Please try again.'); }
-    finally { setLoading(false); }
+      setTotal(activeTab === 'ALL' && !searchQuery.trim() ? serverTotal : apps.length);
+    } catch (err) {
+      console.error('Failed to load applications:', err);
+      setError('Unable to load applications. Please try again.');
+      setApps([]);
+      setTotal(0);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fetchSummary = async () => {
@@ -296,10 +339,34 @@ const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
   };
 
   const TABS: StatusTab[] = ['ALL', 'PENDING', 'APPROVED', 'REJECTED', 'WAITLISTED'];
-  const displayApplications = [...applications].sort((a, b) => {
-    const left = String(a[sort] || '').toLowerCase();
-    const right = String(b[sort] || '').toLowerCase();
-    return (left < right ? -1 : left > right ? 1 : 0) * (sortDir === 'asc' ? 1 : -1);
+
+  // Second status safeguard before rendering.
+  const filteredApplications = applications.filter((app: any) => {
+    if (activeTab === 'ALL') return true;
+    return String(app.status || '').trim().toUpperCase() === activeTab;
+  });
+
+  const displayApplications = [...filteredApplications].sort((a, b) => {
+    let left = '';
+    let right = '';
+
+    if (sort === 'name') {
+      left = String(
+        a.full_name || a.firstName || [a.first_name, a.last_name].filter(Boolean).join(' ') || ''
+      ).toLowerCase();
+      right = String(
+        b.full_name || b.firstName || [b.first_name, b.last_name].filter(Boolean).join(' ') || ''
+      ).toLowerCase();
+    } else if (sort === 'status') {
+      left = String(a.status || '').toLowerCase();
+      right = String(b.status || '').toLowerCase();
+    } else {
+      left = String(a.createdAt || a.submitted_at || a.submittedAt || '');
+      right = String(b.createdAt || b.submitted_at || b.submittedAt || '');
+    }
+
+    const result = left < right ? -1 : left > right ? 1 : 0;
+    return result * (sortDir === 'asc' ? 1 : -1);
   });
 
   return (
@@ -403,7 +470,7 @@ const ApplicationsModuleBase: React.FC<ApplicationsModuleProps> = ({
             </tr>
           </thead>
           <tbody className="divide-y divide-[#111]">
-            {applications.length === 0 ? (
+            {displayApplications.length === 0 ? (
               <tr>
                 <td colSpan={applicationType === 'website' ? 7 : 8} className="py-16 text-center text-sm">
                   {loading ? <span className="text-[#555]">Loading…</span> : error ? <button onClick={fetchApps} className="text-red-300 hover:text-red-100">{error} Retry</button> : <span className="text-[#555]">No applications found.</span>}
